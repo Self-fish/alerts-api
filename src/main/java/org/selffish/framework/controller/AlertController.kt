@@ -17,7 +17,7 @@ class AlertController(private val addAlert: AddAlertUseCase, private val getAler
 
     @RequestMapping(method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun add(@RequestBody alertDataModel: AlertDataModel): Alert {
-        val alert = Alert(null, null, null, alertDataModel.title,
+        val alert = Alert(null, null, alertDataModel.title,
             alertDataModel.text, null, alertDataModel.repeatRate)
         return addAlert.create(alert)
     }
@@ -26,8 +26,13 @@ class AlertController(private val addAlert: AddAlertUseCase, private val getAler
     fun getAll() =  getAlert.getAllAlerts()
 
     @RequestMapping(method= [RequestMethod.GET], value = ["/{id}"])
-    fun getById(@PathVariable id: String) =  getAlert.getById(id)
-
+    fun getById(@PathVariable id: String) : Alert {
+        val alert = getAlert.getById(id)
+        if(alert.isPresent) {
+            return alert.get()
+        }
+        throw AlertNotFoundException()
+    }
 
     @RequestMapping(method= [RequestMethod.DELETE], value = ["/{id}"])
     fun deleteById(@PathVariable id: String) =  deleteAlert.deleteById(id)

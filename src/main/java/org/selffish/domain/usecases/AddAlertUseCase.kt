@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 class AddAlertUseCase(private val alertsRepository: AlertsRepository) {
 
     fun create(alert: Alert) : Alert {
+        alert.creationDate = System.currentTimeMillis()
         return alertsRepository.insert(alert)
     }
 
