@@ -1,6 +1,6 @@
 package org.selffish.framework.controller
 
-import org.selffish.adapters.datamodels.AlertDataModel
+import org.selffish.adapters.datamodels.AlertWebModel
 import org.selffish.domain.entities.Alert
 import org.selffish.domain.usecases.AddAlertUseCase
 import org.selffish.domain.usecases.DeleteAlertUseCase
@@ -16,9 +16,9 @@ class AlertController(private val addAlert: AddAlertUseCase, private val getAler
     private val deleteAlert: DeleteAlertUseCase, private val updateAlert: UpdateAlertUseCase) {
 
     @RequestMapping(method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun add(@RequestBody alertDataModel: AlertDataModel): Alert {
-        val alert = Alert(null, null, alertDataModel.title,
-            alertDataModel.text, null, alertDataModel.repeatRate)
+    fun add(@RequestBody alertWebModel: AlertWebModel): Alert {
+        val alert = Alert(null, null, alertWebModel.title,
+            alertWebModel.text, null, alertWebModel.starts, alertWebModel.repeatRate)
         return addAlert.create(alert)
     }
 
