@@ -3,19 +3,20 @@ package org.selffish.framework.controller
 import org.selffish.adapters.web.AlertWebModel
 import org.selffish.adapters.web.AlertWebModelMapper
 import org.selffish.domain.entities.Alert
-import org.selffish.domain.usecases.AddAlertUseCase
-import org.selffish.domain.usecases.DeleteAlertUseCase
-import org.selffish.domain.usecases.GetAlertUseCase
-import org.selffish.domain.usecases.UpdateAlertUseCase
+import org.selffish.domain.usecases.*
 import org.selffish.framework.exceptions.AlertNotFoundException
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("alerts")
-class AlertController(private val addAlert: AddAlertUseCase, private val getAlert: GetAlertUseCase,
-    private val deleteAlert: DeleteAlertUseCase, private val updateAlert: UpdateAlertUseCase,
-    private val alertWebModelMapper: AlertWebModelMapper) {
+
+class AlertController(private val addAlert: AddAlertUseCase,
+                      private val getAlert: GetAlertUseCase,
+                      private val deleteAlert: DeleteAlertUseCase,
+                      private val updateAlert: UpdateAlertUseCase,
+                      private val executeAlertUseCase: ExecuteAlertUseCase,
+                      private val alertWebModelMapper: AlertWebModelMapper) {
 
     @RequestMapping(method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun add(@RequestBody alertWebModel: AlertWebModel): Alert {
@@ -45,5 +46,16 @@ class AlertController(private val addAlert: AddAlertUseCase, private val getAler
         }
         throw AlertNotFoundException()
     }
+
+    @RequestMapping(method= [RequestMethod.POST], value = ["/{id}/execute"])
+    fun execute(@PathVariable id: String) : Alert {
+        val alert = executeAlertUseCase.executeAlert(id)
+        if(alert != null) {
+            return alert
+        }
+        throw AlertNotFoundException()
+    }
+
+
 
 }
