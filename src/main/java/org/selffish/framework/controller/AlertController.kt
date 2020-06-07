@@ -1,6 +1,7 @@
 package org.selffish.framework.controller
 
-import org.selffish.adapters.datamodels.AlertWebModel
+import org.selffish.adapters.web.AlertWebModel
+import org.selffish.adapters.web.AlertWebModelMapper
 import org.selffish.domain.entities.Alert
 import org.selffish.domain.usecases.AddAlertUseCase
 import org.selffish.domain.usecases.DeleteAlertUseCase
@@ -13,13 +14,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("alerts")
 class AlertController(private val addAlert: AddAlertUseCase, private val getAlert: GetAlertUseCase,
-    private val deleteAlert: DeleteAlertUseCase, private val updateAlert: UpdateAlertUseCase) {
+    private val deleteAlert: DeleteAlertUseCase, private val updateAlert: UpdateAlertUseCase,
+    private val alertWebModelMapper: AlertWebModelMapper) {
 
     @RequestMapping(method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun add(@RequestBody alertWebModel: AlertWebModel): Alert {
-        val alert = Alert(null, null, alertWebModel.title,
-            alertWebModel.text, null, alertWebModel.starts, alertWebModel.repeatRate)
-        return addAlert.create(alert)
+        return addAlert.create(alertWebModelMapper.createAlert(alertWebModel))
     }
 
     @RequestMapping(method= [RequestMethod.GET])

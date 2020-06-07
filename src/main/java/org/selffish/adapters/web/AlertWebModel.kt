@@ -1,4 +1,4 @@
-package org.selffish.adapters.datamodels
+package org.selffish.adapters.web
 
 import org.selffish.domain.entities.RepeatRate
 import org.selffish.domain.entities.StartingMoment
