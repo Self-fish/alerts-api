@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("alerts")
-
 class AlertController(private val addAlert: AddAlertUseCase,
                       private val getAlert: GetAlertUseCase,
                       private val deleteAlert: DeleteAlertUseCase,
                       private val updateAlert: UpdateAlertUseCase,
                       private val executeAlertUseCase: ExecuteAlertUseCase,
-                      private val alertWebModelMapper: AlertWebModelMapper) {
+                      private val alertWebModelMapper: AlertWebModelMapper,
+                      private val nextAlert: NextAlertUseCase) {
 
     @RequestMapping(method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun add(@RequestBody alertWebModel: AlertWebModel): Alert {
@@ -25,6 +25,9 @@ class AlertController(private val addAlert: AddAlertUseCase,
 
     @RequestMapping(method= [RequestMethod.GET])
     fun getAll() =  getAlert.getAllAlerts()
+
+    @RequestMapping(method= [RequestMethod.GET], value = ["/next"])
+    fun getNext() =  nextAlert.getNextAlert()
 
     @RequestMapping(method= [RequestMethod.GET], value = ["/{id}"])
     fun getById(@PathVariable id: String) : Alert {
