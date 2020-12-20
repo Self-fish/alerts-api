@@ -9,12 +9,17 @@ import java.time.LocalDateTime
 @Service
 class NextAlertUseCase(private val alertsRepository: AlertsRepository) {
 
-    fun getNextAlert(): Alert {
+    fun getNextAlert(): Alert? {
         val orderedAlerts = orderAlerts(alertsRepository.getAll())
-        return orderedAlerts.first()
+        for(alert in orderedAlerts) {
+            if(!wasNearlySent(alert)) {
+                return alert
+            }
+        }
+        return null
     }
 
-    fun orderAlerts(allAlerts: List<Alert>): List<Alert> {
+    private fun orderAlerts(allAlerts: List<Alert>): List<Alert> {
         val alertsComparator = Comparator<Alert> { a, b ->
             val today = StartingMoment(
                 LocalDateTime.now().dayOfWeek, LocalDateTime.now().hour,
@@ -33,5 +38,13 @@ class NextAlertUseCase(private val alertsRepository: AlertsRepository) {
         }
 
         return allAlerts.sortedWith(alertsComparator)
+    }
+
+    private fun wasNearlySent(alert: Alert): Boolean {
+        if(alert.executionHistory.isNotEmpty()) {
+            val lastExecution: Long = alert.executionHistory.last()
+            return (lastExecution + 120000) > System.currentTimeMillis()
+        }
+        return false
     }
 }

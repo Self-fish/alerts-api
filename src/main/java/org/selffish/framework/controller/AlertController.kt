@@ -27,7 +27,13 @@ class AlertController(private val addAlert: AddAlertUseCase,
     fun getAll() =  getAlert.getAllAlerts()
 
     @RequestMapping(method= [RequestMethod.GET], value = ["/next"])
-    fun getNext() =  nextAlert.getNextAlert()
+    fun getNext(): Alert{
+        val alert = nextAlert.getNextAlert()
+        if(alert != null) {
+            return alert
+        }
+        throw AlertNotFoundException()
+    }
 
     @RequestMapping(method= [RequestMethod.GET], value = ["/{id}"])
     fun getById(@PathVariable id: String) : Alert {
