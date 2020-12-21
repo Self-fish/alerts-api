@@ -5,14 +5,20 @@ import org.selffish.domain.entities.Alert
 import org.selffish.domain.entities.StartingMoment
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @Service
 class NextAlertUseCase(private val alertsRepository: AlertsRepository) {
 
+    companion object {
+        const val TIME_ZONE = "Europe/Madrid"
+    }
+
     fun getNextAlert(): Alert? {
         val orderedAlerts = orderAlerts(alertsRepository.getAll())
         for(alert in orderedAlerts) {
-            if(!wasNearlySent(alert)) {
+            if(isNearlyAlert(alert) && !wasNearlySent(alert)) {
                 return alert
             }
         }
@@ -43,8 +49,15 @@ class NextAlertUseCase(private val alertsRepository: AlertsRepository) {
     private fun wasNearlySent(alert: Alert): Boolean {
         if(alert.executionHistory.isNotEmpty()) {
             val lastExecution: Long = alert.executionHistory.last()
-            return (lastExecution + 120000) > System.currentTimeMillis()
+            return (lastExecution + 300000) > System.currentTimeMillis()
         }
         return false
     }
+
+    private fun isNearlyAlert(alert: Alert): Boolean =
+        alert.starts.day == ZonedDateTime.now(ZoneId.of(TIME_ZONE)).dayOfWeek &&
+                alert.starts.hour == ZonedDateTime.now(ZoneId.of(TIME_ZONE)).hour &&
+                alert.starts.minute > ZonedDateTime.now(ZoneId.of(TIME_ZONE)).minute &&
+                alert.starts.minute < ZonedDateTime.now(ZoneId.of(TIME_ZONE)).minute + 5
+
 }
