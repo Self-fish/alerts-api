@@ -49,7 +49,7 @@ class NextAlertUseCase(private val alertsRepository: AlertsRepository) {
     private fun wasNearlySent(alert: Alert): Boolean {
         if(alert.executionHistory.isNotEmpty()) {
             val lastExecution: Long = alert.executionHistory.last()
-            return (lastExecution + 300000) > System.currentTimeMillis()
+            return (lastExecution + 120000) > System.currentTimeMillis()
         }
         return false
     }
@@ -58,6 +58,6 @@ class NextAlertUseCase(private val alertsRepository: AlertsRepository) {
         alert.starts.day == ZonedDateTime.now(ZoneId.of(TIME_ZONE)).dayOfWeek &&
                 alert.starts.hour == ZonedDateTime.now(ZoneId.of(TIME_ZONE)).hour &&
                 alert.starts.minute > ZonedDateTime.now(ZoneId.of(TIME_ZONE)).minute &&
-                alert.starts.minute < ZonedDateTime.now(ZoneId.of(TIME_ZONE)).minute + 5
+                alert.starts.minute < ZonedDateTime.now(ZoneId.of(TIME_ZONE)).minute + 2
 
 }
