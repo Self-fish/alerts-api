@@ -58,6 +58,6 @@ class NextAlertUseCase(private val alertsRepository: AlertsRepository) {
         alert.starts.day == ZonedDateTime.now(ZoneId.of(TIME_ZONE)).dayOfWeek &&
                 alert.starts.hour == ZonedDateTime.now(ZoneId.of(TIME_ZONE)).hour &&
                 alert.starts.minute > ZonedDateTime.now(ZoneId.of(TIME_ZONE)).minute &&
-                alert.starts.minute < ZonedDateTime.now(ZoneId.of(TIME_ZONE)).minute + 2
+                alert.starts.minute < ZonedDateTime.now(ZoneId.of(TIME_ZONE)).minute + 5
 
 }
