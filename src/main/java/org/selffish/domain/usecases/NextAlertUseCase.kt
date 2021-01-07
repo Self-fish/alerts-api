@@ -49,7 +49,7 @@ class NextAlertUseCase(private val alertsRepository: AlertsRepository) {
     private fun wasNearlySent(alert: Alert): Boolean {
         if(alert.executionHistory.isNotEmpty()) {
             val lastExecution: Long = alert.executionHistory.last()
-            return (lastExecution + 120000) > System.currentTimeMillis()
+            return (lastExecution + 300000) > System.currentTimeMillis()
         }
         return false
     }
