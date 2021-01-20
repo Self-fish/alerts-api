@@ -8,8 +8,8 @@
     <springProperty scope="local" name="logstash_port" source="logstash.port"/>
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <param name="Encoding" value="UTF-8"/>
-        <remoteHost>localhost</remoteHost>
-        <port>5000</port>
+        <remoteHost>${logstash_host}</remoteHost>
+        <port>${logstash_port}</port>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
     </appender>
     <root level="INFO">
