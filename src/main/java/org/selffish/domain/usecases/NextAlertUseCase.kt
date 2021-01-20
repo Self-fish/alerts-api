@@ -21,7 +21,7 @@ class NextAlertUseCase(private val alertsRepository: AlertsRepository) {
     }
 
     fun getNextAlert(): Alert? {
-        log.info("This is a test log");
+        log.info("This is a test log")
         val orderedAlerts = orderAlerts(alertsRepository.getAll())
         for(alert in orderedAlerts) {
             if(isNearlyAlert(alert) && !wasNearlySent(alert)) {
