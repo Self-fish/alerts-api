@@ -3,19 +3,25 @@ package org.selffish.domain.usecases
 import org.selffish.domain.contracts.AlertsRepository
 import org.selffish.domain.entities.Alert
 import org.selffish.domain.entities.StartingMoment
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
+
 @Service
 class NextAlertUseCase(private val alertsRepository: AlertsRepository) {
+
+    private val log: Logger = LoggerFactory.getLogger(NextAlertUseCase::class.java)
 
     companion object {
         const val TIME_ZONE = "Europe/Madrid"
     }
 
     fun getNextAlert(): Alert? {
+        log.info("This is a test log");
         val orderedAlerts = orderAlerts(alertsRepository.getAll())
         for(alert in orderedAlerts) {
             if(isNearlyAlert(alert) && !wasNearlySent(alert)) {
